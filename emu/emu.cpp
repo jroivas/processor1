@@ -151,7 +151,7 @@ public:
     }
 
     void dumpval(RegType val) {
-        std::cout << "=" << std::setw(8) << std::setfill('0') << val;
+        std::cout << "=" << std::setw(16) << std::setfill('0') << val;
     }
 
     void dumpnamedreg(std::string name, RegType val, bool newline=true) {
@@ -178,6 +178,8 @@ public:
     }
 
     void dump() {
+        std::cout << "\n";
+        std::cout << "====================\n";
         dumpnamedreg("PC", PC);
         dumpnamedreg("SP", SP);
         dumpnamedreg("IP", IP);
@@ -224,14 +226,31 @@ void decodeOne(World *w, OpType op) {
     }
 }
 
+void runInterrupt(World *w, RegType intnum) {
+    if (intnum == 1) {
+        // Special system interrupt
+        switch (w->registers[0]) {
+            case 1:
+                // Putchar
+                std::cout << (char)(w->registers[1] & 0xFF);
+                break;
+            default:
+                w->error("Invalid interrupt command at INT 0x1: " +
+                    std::to_string(w->registers[0]));
+        }
+    } else {
+        //Return from int with RET
+        w->push(w->PC);
+        w->PC = w->getInterrupt(intnum);
+    }
+}
+
 void decodeTwo(World *w, OpType op) {
     ByteType reg1 = w->mem[w->PC + 1];
     w->PC += 2;
     switch (op) {
         case INT:
-            //Return from int with RET
-            w->push(w->PC);
-            w->PC = w->getInterrupt(reg1);
+            runInterrupt(w, reg1);
             break;
         case LPC:
             w->registers[reg1] = w->PC;
@@ -491,5 +510,5 @@ int main(int argc, char **argv) {
 
     decode(w);
 
-    w->dump();
+    //w->dump();
 }

@@ -1,0 +1,6 @@
+; Load immediate 2 to register 1
+LI 1, #2
+; Load immediate 3 to register 2
+LI 2, #3
+; Add unsigned regs 1 and 2
+AU 1, 2
