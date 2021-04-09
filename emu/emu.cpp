@@ -510,5 +510,5 @@ int main(int argc, char **argv) {
 
     decode(w);
 
-    //w->dump();
+    w->dump();
 }

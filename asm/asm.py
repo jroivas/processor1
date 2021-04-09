@@ -87,7 +87,7 @@ def parseLine(res, line):
         return res
 
     if line[0] == ';':
-        print 'Comment: %s' % line
+        print('Comment: %s' % line)
         return res
 
     datas = [x.strip() for x in line.split(' ')]
@@ -108,7 +108,7 @@ def parse(data):
 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
-        print 'Usage: %s source.asm dest.bin' % sys.argv[0]
+        print('Usage: %s source.asm dest.bin' % sys.argv[0])
         sys.exit(1)
 
     with open(sys.argv[1], 'r') as fd:
@@ -116,5 +116,5 @@ if __name__ == '__main__':
 
     res = parse(data)
 
-    with open(sys.argv[2], 'w+') as fd:
+    with open(sys.argv[2], 'wb+') as fd:
         fd.write(bytearray(res))
